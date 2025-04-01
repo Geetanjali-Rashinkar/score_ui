@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/score_ui/static/Style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        input, button {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        button {
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 400px;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>Enter PAN</h1>
+    <input type="text" id="uniqueId" placeholder="Enter PAN">
+    <button onclick="fetchData()">Get Score</button>
+    <p id="error" class="error"></p>
+    <div id="result" class="result" style="display: none;"></div>
+
+    <script>
+        async function fetchData() {
+            const uniqueId = document.getElementById("uniqueId").value;
+            const resultDiv = document.getElementById("result");
+            const errorDiv = document.getElementById("error");
+            resultDiv.style.display = "none";
+            errorDiv.textContent = "";
+
+            try {
+                const response = await fetch(`http://localhost:8000/fetch/${uniqueId}`);
+                if (!response.ok) throw new Error("Data not found");
+                const data = await response.json();
+                resultDiv.textContent=data.db_value;
+               // resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.style.display = "block";
+            } catch (err) {
+                errorDiv.textContent = "Data not found";
+            }
+        }
+    </script>
+</body>
+</html>
